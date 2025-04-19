@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio - Hamburgueria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Bungee&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #2b2b2b);
+            color: #fff;
+            min-height: 100vh;
+        }
+        header {
+            background-color: #000;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #d4af37;
+        }
+        header img {
+            max-width: 300px;
+            height: auto;
+        }
+        .menu {
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            font-family: 'Bungee', sans-serif;
+            color: #d4af37;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+            font-size: 1.8em;
+            font-weight: 600;
+            text-align: center;
+        }
+        .item {
+            background-color: #2b2b2b;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px #d4af37;
+        }
+        .item img {
+            width: 30%; /* Tamanho padrão para telas maiores */
+            height: auto; /* Mantém a proporção */
+            object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .item img.loaded {
+            opacity: 1;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .item-details h3 {
+            color: #d4af37;
+            margin-bottom: 5px;
+        }
+        .item-details p {
+            color: #ccc;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .item-details span {
+            font-weight: 600;
+            color: #fff;
+        }
+        .item button {
+            background-color: #d4af37;
+            color: #000;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s;
+        }
+        .item button:hover {
+            background-color: #b8972e;
+        }
+        .modal {
+            display: none;
+            opacity: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+        .modal-open {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-content {
+            background-color: #2b2b2b;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            position: relative;
+        }
+        .modal-content h3 {
+            color: #d4af37;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        .modal-content h4 {
+            color: #d4af37;
+            margin: 15px 0 5px;
+        }
+        .modal-content label {
+            display: block;
+            margin: 8px 0;
+            color: #fff;
+            font-size: 0.9em;
+        }
+        .modal-content input[type="radio"],
+        .modal-content input[type="checkbox"] {
+            margin-right: 10px;
+            accent-color: #d4af37;
+        }
+        .modal-content button {
+            background-color: #d4af37;
+            color: #000;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .modal-content button:hover {
+            background-color: #b8972e;
+        }
+        .cart-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #d4af37;
+            color: #000;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        .cart-button:hover {
+            transform: scale(1.1);
+        }
+        .cart-button i {
+            font-size: 1.5em;
+        }
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .cart-modal-content {
+            background-color: #2b2b2b;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            position: relative;
+        }
+        .cart-modal-content h3 {
+            color: #d4af37;
+            margin-top: 0;
+        }
+        .cart-item {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #3a3a3a;
+            border-radius: 8px;
+        }
+        .cart-item button {
+            background-color: #ff4444;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.8em;
+        }
+        .cart-modal-content input[type="text"],
+        .cart-modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            background-color: #3a3a3a;
+            color: #fff;
+            resize: vertical;
+        }
+        .cart-modal-content textarea {
+            min-height: 80px;
+        }
+        .cart-modal-content button {
+            background-color: #d4af37;
+            color: #000;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+        }
+        .cart-modal-content button:hover {
+            background-color: #b8972e;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #d4af37;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        footer {
+            background-color: #000;
+            padding: 20px;
+            text-align: center;
+            color: #d4af37;
+            border-top: 5px solid #d4af37;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .pulse {
+            animation: pulse 0.5s;
+        }
+        @media (max-width: 768px) {
+            header img {
+                max-width: 200px;
+            }
+            .section h2 {
+                font-size: 1.5em;
+            }
+            .item {
+                flex-direction: column; /* Itens empilhados no mobile */
+                align-items: center; /* Centraliza tudo */
+                gap: 10px;
+            }
+            .item img {
+                width: 100%; /* Ocupa toda a largura do item no mobile */
+                max-width: 200px; /* Limita o tamanho máximo para não exagerar */
+            }
+            .item-details {
+                text-align: center; /* Centraliza o texto no mobile */
+            }
+            .item button {
+                width: 100%;
+                justify-content: center;
+                padding: 12px;
+            }
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+            .modal-content h3 {
+                font-size: 1.3em;
+            }
+            .modal-content label {
+                font-size: 0.85em;
+            }
+            .cart-button {
+                padding: 12px;
+                bottom: 15px;
+                right: 15px;
+            }
+            .cart-button i {
+                font-size: 1.2em;
+            }
+            .cart-modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+            footer {
+                font-size: 0.8em;
+                padding: 15px;
+            }
+        }
+        @media (min-width: 769px) {
+            .item {
+                padding: 20px;
+            }
+            .item-details h3 {
+                font-size: 1.2em;
+            }
+            .item-details p {
+                font-size: 1em;
+            }
+            .item button {
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <img src="logo2.png" alt="Logotipo da Hamburgueria">
+    </header>
+
+    <!-- Menu -->
+    <div class="menu">
+        <!-- Hamburgueres Podrão -->
+        <div class="section">
+            <h2>Hamburgueres Podrão</h2>
+            <div class="item">
+                <img src="bur.jpg" alt="Hamburguer Podrão">
+                <div class="item-details">
+                    <h3>Podrãozila</h3>
+                    <p>Pão, carne, bacon, calabresa, ovo, queijo, presunto, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <span>R$ 35,90</span>
+                </div>
+                <button onclick="openModal('Podrãozila', 35.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="bur2.jpg" alt="Hamburguer Podrão">
+                <div class="item-details">
+                    <h3>Explosão da Rua 3.0</h3>
+                    <p>Pão, carne, bacon, calabresa, ovo, queijo, presunto, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <span>R$ 37,90</span>
+                </div>
+                <button onclick="openModal('Explosão da Rua 3.0', 37.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="bur3.jpg" alt="Hamburguer Podrão">
+                <div class="item-details">
+                    <h3>Apocalanche</h3>
+                    <p>Pão, 2 carnes, bacon, calabresa, 2 ovos, 2 queijos, 2 presuntos, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <span>R$ 39,90</span>
+                </div>
+                <button onclick="openModal('Apocalanche', 39.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="bur4.jpg" alt="Hamburguer Podrão">
+                <div class="item-details">
+                    <h3>Bacon do Capeta</h3>
+                    <p>Pão, 3 carnes, bacon, calabresa, 3 ovos, 3 queijos, 3 presuntos, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <span>R$ 33,50</span>
+                </div>
+                <button onclick="openModal('Bacon do Capeta', 33.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="bur5.jpg" alt="Hamburguer Podrão">
+                <div class="item-details">
+                    <h3>Podrão Ovo Lover</h3>
+                    <p>Pão, carne, bacon, queijo, presunto, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <span>R$ 34,50</span>
+                </div>
+                <button onclick="openModal('Podrão Ovo Lover', 34.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="bur6.jpg" alt="Hamburguer Podrão">
+                <div class="item-details">
+                    <h3>Duplo Pecado Podrão</h3>
+                    <p>Pão, carne, ovo, queijo, presunto, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <span>R$ 35,90</span>
+                </div>
+                <button onclick="openModal('Duplo Pecado Podrão', 35.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="bur7.jpg" alt="Hamburguer Podrão">
+                <div class="item-details">
+                    <h3>Clássico do Caos</h3>
+                    <p>Pão, 2 carnes, 2 queijos, 2 presuntos, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <span>R$ 33,50</span>
+                </div>
+                <button onclick="openModal('Clássico do Caos', 33.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="bur8.jpg" alt="Hamburguer Podrão">
+                <div class="item-details">
+                    <h3>Explosão Calabresa</h3>
+                    <p>Pão, carne, calabresa, queijo, presunto, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <span>R$ 34,50</span>
+                </div>
+                <button onclick="openModal('Explosão Calabresa', 34.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+        </div>
+
+        <!-- Diadorin Furioso -->
+        <div class="section">
+            <h2>Diadorin Furioso</h2>
+            <div class="item">
+                <img src="furioso.jpg" alt="Diadorin Furioso">
+                <div class="item-details">
+                    <h3>Furioso Ovoalucinante</h3>
+                    <p>Pão, 4 carnes, 4 ovos, 4 presunto, 4 queijo, alface, tomate, milho, ervilha, cebola, batata palha, queijo ralado, ovo de codorna, azeitona e 3 molhos</p>
+                    <span>R$ 47,90</span>
+                </div>
+                <button onclick="openModal('Furioso Ovoalucinante', 47.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="furioso2.jpg" alt="Diadorin Furioso">
+                <div class="item-details">
+                    <h3>Furioso Crocância Extrema</h3>
+                    <p>Pão, 4 carnes, 4 bacon, 4 presunto, 4 queijo, alface, tomate, milho, ervilha, cebola, batata palha, queijo ralado, ovo de codorna, azeitona e 3 molhos</p>
+                    <span>R$ 47,90</span>
+                </div>
+                <button onclick="openModal('Furioso Crocância Extrema', 47.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="furioso3.jpg" alt="Diadorin Furioso">
+                <div class="item-details">
+                    <h3>Furioso Apocalipse</h3>
+                    <p>Pão, 4 carnes, 4 calabresa, 4 bacon, 4 ovos, 4 presunto, 4 queijo, alface, tomate, milho, ervilha, cebola, batata palha, queijo ralado, ovo de codorna, azeitona e 3 molhos.</p>
+                    <span>R$ 47,90</span>
+                </div>
+                <button onclick="openModal('Furioso Apocalipse', 47.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+        </div>
+
+        <!-- Combo na Caixa com Podrão -->
+        <div class="section">
+            <h2>Combo na Caixa com Podrão</h2>
+            <div class="item">
+                <img src="combo.jpg" alt="Combo na Caixa com Podrão">
+                <div class="item-details">
+                    <h3>Dupla da Tentação</h3>
+                    <p>Dois X-Tudo Podrão + nossa batata frita coberta com cheddar melt e bacon crocante. Ideal pra dividir... ou não.</p>
+                    <span>R$ 95,90</span>
+                </div>
+                <button onclick="openModal('Dupla da Tentação', 95.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="combo2.jpg" alt="Combo na Caixa com Podrão">
+                <div class="item-details">
+                    <h3>Combo Brutalidade</h3>
+                    <p>2 X-Tudo Podrão, batata com cheddar e bacon, anéis de cebola e nugget ou salgados variados. É comida de respeito!</p>
+                    <span>R$ 101,50</span>
+                </div>
+                <button onclick="openModal('Combo Brutalidade', 101.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="combo3.jpg" alt="Combo na Caixa com Podrão">
+                <div class="item-details">
+                    <h3>Trinca Pesada</h3>
+                    <p>3 X-Tudo Podrão, batata cheddar e bacon, anéis crocantes e salgados ou nuggets. Pra quem não brinca de comer!</p>
+                    <span>R$ 147,90</span>
+                </div>
+                <button onclick="openModal('Trinca Pesada', 147.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+        </div>
+
+
+
+        <!-- Combos na Caixa com Lanches -->
+        <div class="section">
+            <h2>Combos na Caixa com Lanches</h2>
+            <div class="item">
+                <img src="combos1.jpg" alt="Combo na Caixa Hamburguer">
+                <div class="item-details">
+                    <h3>Solteirão da Fome</h3>
+                    <p>1 hambúrguer à escolha + 3 porções de acompanhamento.</p>
+                    <span>R$ 54,90</span>
+                </div>
+                <button onclick="openModal('Solteirão da Fome', 54.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="combos2.jpg" alt="Combo na Caixa Hamburguer">
+                <div class="item-details">
+                    <h3>Shippo Muito Esse Casal</h3>
+                    <p>2 burgers artesanais à escolha + 3 porções (batata com cheddar & bacon, salgados e cebolas empanadas).</p>
+                    <span>R$ 95,50</span>
+                </div>
+                <button onclick="openModal('Shippo Muito Esse Casal', 95.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="combos3.jpg" alt="Combo na Caixa Hamburguer">
+                <div class="item-details">
+                    <h3>Eu Sou o Combo Perigo</h3>
+                    <p>3 hambúrgueres à escolha + até 3 porções.</p>
+                    <span>R$ 125,90</span>
+                </div>
+                <button onclick="openModal('Eu Sou o Combo Perigo', 125.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="combos4.jpg" alt="Combo na Caixa Hamburguer">
+                <div class="item-details">
+                    <h3>Senta que Lá Vem Família</h3>
+                    <p>4 hambúrgueres à escolha + até 3 porções.</p>
+                    <span>R$ 135,90</span>
+                </div>
+                <button onclick="openModal('Senta que Lá Vem Família', 135.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="combos5.jpg" alt="Combo na Caixa Hamburguer">
+                <div class="item-details">
+                    <h3>Chama no Zap: Combo na Área</h3>
+                    <p>5 hambúrgueres à escolha + porções de salgados, cebolas empanadas e batata com cheddar & bacon.</p>
+                    <span>R$ 145,90</span>
+                </div>
+                <button onclick="openModal('Chama no Zap: Combo na Área', 145.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+        </div>
+
+        <!-- Lanches -->
+        <div class="section">
+            <h2>Lanches</h2>
+            <div class="item">
+                <img src="lanche.jpg" alt="Lanche Simples">
+                <div class="item-details">
+                    <h3>Cheddarzão Cremoso</h3>
+                    <p>Super hambúrguer Artesanal (100g), muito molho cheddar e cebolas caramelizada. Destaque para o molho cheddar em abundância.</p>
+                    <span>R$ 20,00</span>
+                </div>
+                <button onclick="openModal('Cheddarzão Cremoso', 20.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="lanche2.jpg" alt="Lanche Simples">
+                <div class="item-details">
+                    <h3>Verde Power</h3>
+                    <p>O clássico Salada Burguer é composto por nosso pão de hamburguer, carne (a escolha), alface e tomate, queijo cheddar, molho maionese defumada e maionese verde da casa. - Para dar aquele ar de leveza e sabor fresco.</p>
+                    <span>R$ 18,00</span>
+                </div>
+                <button onclick="openModal('Verde Power', 18.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="lanche3.jpg" alt="Lanche Simples">
+                <div class="item-details">
+                    <h3>Sr. Bacon</h3>
+                    <p>Bacon Burguer é composto por nosso pão de hamburguer, carne (a escolha), bacons fatiado, queijo cheddar, molho maionese defumada e maionese verde da casa. Para realçar o rei do sabor: o bacon!</p>
+                    <span>R$ 20,00</span>
+                </div>
+                <button onclick="openModal('Sr. Bacon', 20.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="lanche4.jpg" alt="Lanche Simples">
+                <div class="item-details">
+                    <h3>QueijoManíaco</h3>
+                    <p>Chesseburguer é composto por nosso pão de hamburguer, carne (a escolha), queijo cheddar, molho maionese defumada e maionese verde da casa.</p>
+                    <span>R$ 17,00</span>
+                </div>
+                <button onclick="openModal('QueijoManíaco', 17.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="lanche5.jpg" alt="Lanche Simples">
+                <div class="item-details">
+                    <h3>Cheddar no Grau</h3>
+                    <p>Super hambúrguer Artesanal (100g) partido ao meio, muito molho cheddar e bacon crocante. Mergulha nesse cheddar!</p>
+                    <span>R$ 52,00</span>
+                </div>
+                <button onclick="openModal('Cheddar no Grau', 52.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+        </div>
+
+        <!-- Smash Burguer -->
+        <div class="section">
+            <h2>Smash Burguer</h2>
+            <div class="item">
+                <img src="smash.jpg" alt="Smash Burguer">
+                <div class="item-details">
+                    <h3>Smash Iniciante</h3>
+                    <p>Pão de hamburguer, carne artesanal 60g, queijo cheddar, molhos maionese defumada e maionese verde da casa.</p>
+                    <span>R$15,99</span>
+                </div>
+                <button onclick="openModal('Smash Iniciante', 15.99)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="smash2.jpg" alt="Smash Burguer">
+                <div class="item-details">
+                    <h3>Smash Upgrade</h3>
+                    <p>Pão de hamburguer, duas carnes artesanal (cada uma com 60g), queijo cheddar, molhos maionese defumada e maionese verde da casa.</p>
+                    <span>R$18,99</span>
+                </div>
+                <button onclick="openModal('Smash Upgrade', 18.99)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="smash3.jpg" alt="Smash Burguer">
+                <div class="item-details">
+                    <h3>Smash Suprema</h3>
+                    <p>Pão de hamburguer, três carnes prensadas (cada uma com 60g) três queijos cheddar, molho maionese defumada e maionese verde da casa.</p>
+                    <span>R$20,99</span>
+                </div>
+                <button onclick="openModal('Smash Suprema', 20.99)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+        </div>
+
+        <!-- Molhos -->
+        <div class="section">
+            <h2>Molhos</h2>
+            <div class="item">
+                <img src="molho.jpg" alt="Molho Extra">
+                <div class="item-details">
+                    <h3>Ketchup</h3>
+                    <p>30g</p>
+                    <span>R$ 0,50</span>
+                </div>
+                <button onclick="addToCartDirectly('Ketchup', 0.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="molho2.jpg" alt="Molho Extra">
+                <div class="item-details">
+                    <h3>Maionese</h3>
+                    <p>30g</p>
+                    <span>R$ 1,50</span>
+                </div>
+                <button onclick="addToCartDirectly('Maionese', 1.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="molho3.jpg" alt="Molho Extra">
+                <div class="item-details">
+                    <h3>Mostarda</h3>
+                    <p>30g</p>
+                    <span>R$ 0,50</span>
+                </div>
+                <button onclick="addToCartDirectly('Mostarda', 0.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="molho4.jpg" alt="Molho Extra">
+                <div class="item-details">
+                    <h3>Maionese temperada (da casa)</h3>
+                    <p>30g</p>
+                    <span>R$ 1,50</span>
+                </div>
+                <button onclick="addToCartDirectly('Maionese temperada (da casa)', 1.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+        </div>
+
+        <!-- Bebidas -->
+        <div class="section">
+            <h2>Bebidas</h2>
+            <div class="item">
+                <img src="refri.jpg" alt="Bebidas">
+                <div class="item-details">
+                    <h3>Coca-cola</h3>
+                    <p>350ml</p>
+                    <span>R$ 7,00</span>
+                </div>
+                <button onclick="addToCartDirectly('Coca-cola', 7.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="refri2.jpg" alt="Bebidas">
+                <div class="item-details">
+                    <h3>Guaraná Antartica</h3>
+                    <p>350ml</p>
+                    <span>7,00</span>
+                </div>
+                <button onclick="addToCartDirectly('Guaraná Antartica', 7.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="refri3.jpg" alt="Bebidas">
+                <div class="item-details">
+                    <h3>Fanta Uva </h3>
+                    <p>350ml</p>
+                    <span>7,00</span>
+                </div>
+                <button onclick="addToCartDirectly('Fanta Uva ', 7.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="suco.jpg" alt="Bebidas">
+                <div class="item-details">
+                    <h3>Suco de Manga </h3>
+                    <p>SUCO NATURAL!</p>
+                    <span>15,00</span>
+                </div>
+                <button onclick="addToCartDirectly('Suco de manga ', 15.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="suco2.jpg" alt="Bebidas">
+                <div class="item-details">
+                    <h3>Suco de Goiaba </h3>
+                    <p>SUCO NATURAL!</p>
+                    <span>15,00</span>
+                </div>
+                <button onclick="addToCartDirectly('Suco de Goiaba ', 15.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="refri4.jpg" alt="Bebidas">
+                <div class="item-details">
+                    <h3>Coca-cola </h3>
+                    <p>2,5L!</p>
+                    <span>21,00</span>
+                </div>
+                <button onclick="addToCartDirectly('Coca-cola 2,5L', 21.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+        </div>
+
+        <!-- Sobremesas -->
+        <div class="section">
+            <h2>Sobremesas</h2>
+            <div class="item">
+                <img src="gelo3.jpeg" alt="Milkshake">
+                <div class="item-details">
+                    <h3>Geladinho</h3>
+                    <p>Manga</p>
+                    <span>R$ 2,00</span>
+                </div>
+                <button onclick="addToCartDirectly('Geladinho de manga', 2.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="gelo2.jpeg" alt="Milkshake">
+                <div class="item-details">
+                    <h3>Geladinho</h3>
+                    <p>Coco</p>
+                    <span>R$ 2,00</span>
+                </div>
+                <button onclick="addToCartDirectly('Geladinho de Coco', 2.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+            <div class="item">
+                <img src="gelo.jpeg" alt="Milkshake">
+                <div class="item-details">
+                    <h3>Geladinho</h3>
+                    <p>Goiaba</p>
+                    <span>R$ 2,00</span>
+                </div>
+                <button onclick="addToCartDirectly('Geladinho de Goiaba', 2.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Personalização -->
+    <div class="modal" id="itemModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('itemModal')">×</span>
+            <h3 id="modalTitle"></h3>
+            <div>
+                <h4>Carne (Escolha 1 opção - OBRIGATÓRIO)</h4>
+                <label><input type="radio" name="carne" value="Hamburguer Industrializado" required>Hamburguer Industrializado</label>
+                <label><input type="radio" name="carne" value="Hamburguer Artesanal 100g (+R$ 4,00)">Hamburguer Artesanal 100g (+R$ 4,00)</label>
+                <label><input type="radio" name="carne" value="Hamburguer Linguiça 100g (+R$ 4,00)">Hamburguer Linguiça 100g (+R$ 4,00)</label>
+                <label><input type="radio" name="carne" value="Frango Empanado (Stake) (+R$ 4,00)">Frango Empanado (Stake) (+R$ 4,00)</label>
+            </div>
+            <div>
+                <h4>Molhos (Escolha até 3 opções)</h4>
+                <label><input type="checkbox" name="molho" value="Ketchup" onchange="limitMolhos(this)">Ketchup</label>
+                <label><input type="checkbox" name="molho" value="Mostarda" onchange="limitMolhos(this)">Mostarda</label>
+                <label><input type="checkbox" name="molho" value="Maionese" onchange="limitMolhos(this)">Maionese</label>
+                <label><input type="checkbox" name="molho" value="Maionese Verde" onchange="limitMolhos(this)">Maionese Verde</label>
+                <label><input type="checkbox" name="molho" value="Barbecue" onchange="limitMolhos(this)">Barbecue</label>
+                <label><input type="checkbox" name="molho" value="Billy Jack" onchange="limitMolhos(this)">Billy Jack</label>
+                <label><input type="checkbox" name="molho" value="Cheddar" onchange="limitMolhos(this)">Cheddar</label>
+                <label><input type="checkbox" name="molho" value="Requeijão" onchange="limitMolhos(this)">Requeijão</label>
+            </div>
+            <div>
+                <h4>Acréscimos (Escolha até 10 opções)</h4>
+                <label><input type="checkbox" name="acrescimo" value="Champinhon (+R$ 1,50)">Champinhon (+R$ 1,50)</label>
+                <label><input type="checkbox" name="acrescimo" value="Cheddar (+R$ 3,50)">Cheddar (+R$ 3,50)</label>
+                <label><input type="checkbox" name="acrescimo" value="Mussarela (+R$ 3,50)">Mussarela (+R$ 3,50)</label>
+                <label><input type="checkbox" name="acrescimo" value="Ovo Frito (+R$ 2,00)">Ovo Frito (+R$ 2,00)</label>
+                <label><input type="checkbox" name="acrescimo" value="Calabresa (+R$ 3,50)">Calabresa (+R$ 3,50)</label>
+                <label><input type="checkbox" name="acrescimo" value="Bacon (+R$ 3,50)">Bacon (+R$ 3,50)</label>
+                <label><input type="checkbox" name="acrescimo" value="Carne Industrializada (+R$ 3,00)">Carne Industrializada (+R$ 3,00)</label>
+                <label><input type="checkbox" name="acrescimo" value="Carne Artesanal 120g (+R$ 5,00)">Carne Artesanal 120g (+R$ 5,00)</label>
+                <label><input type="checkbox" name="acrescimo" value="Frango Empanado (Stake) (+R$ 4,00)">Frango Empanado (Stake) (+R$ 4,00)</label>
+                <label><input type="checkbox" name="acrescimo" value="Salcicha (+R$ 2,50)">Salcicha (+R$ 2,50)</label>
+            </div>
+            <div>
+                <h4>Que tal uma Batata para acompanhar? (Escolha até 1 opção)</h4>
+                <label><input type="checkbox" name="batata" value="Batata Frita Média (+R$ 9,99)" onchange="limitBatata(this)">Batata Frita Média (+R$ 9,99)</label>
+                <label><input type="checkbox" name="batata" value="Batata Frita com Cheddar e Bacon Média (+R$ 23,99)" onchange="limitBatata(this)">Batata Frita com Cheddar e Bacon Média (+R$ 23,99)</label>
+                <label><input type="checkbox" name="batata" value="Batata Maluca (300g com calabresa, bacon, cheddar e requeijão) (+R$ 24,90)" onchange="limitBatata(this)">Batata Maluca (300g com calabresa, bacon, cheddar e requeijão) (+R$ 24,90)</label>
+            </div>
+            <div>
+                <h4>Algo para Beber? (Escolha até 1 opção)</h4>
+                <label><input type="checkbox" name="bebida" value="Coca-Cola (+R$ 7,00)" onchange="limitBebida(this)">Coca-Cola (+R$ 7,00)</label>
+                <label><input type="checkbox" name="bebida" value="Fanta Uva 350ml (+R$ 7,00)" onchange="limitBebida(this)">Fanta Uva 350ml (+R$ 7,00)</label>
+                <label><input type="checkbox" name="bebida" value="Guarana Antarctica Lata (+R$ 7,00)" onchange="limitBebida(this)">Guarana Antarctica Lata (+R$ 7,00)</label>
+                <label><input type="checkbox" name="bebida" value="Suco Natural - Manga 500ml (+R$ 15,00)" onchange="limitBebida(this)">Suco Natural - Manga 500ml (+R$ 15,00)</label>
+                <label><input type="checkbox" name="bebida" value="Suco Natural - Goiaba 500ml (+R$ 15,00)" onchange="limitBebida(this)">Suco Natural - Goiaba 500ml (+R$ 15,00)</label>
+            </div>
+            <button onclick="addToCart()">Adicionar ao Carrinho</button>
+        </div>
+    </div>
+
+    <!-- Botão do Carrinho -->
+    <div class="cart-button" onclick="openCart()">
+        <i class="fas fa-shopping-cart"></i>
+    </div>
+
+    <!-- Modal do Carrinho -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-modal-content">
+            <span class="close-btn" onclick="closeModal('cartModal')">×</span>
+            <h3>Carrinho</h3>
+            <div id="cartItems"></div>
+            <div>Total: R$ <span id="cartTotal">0,00</span></div>
+            <input type="text" id="endereco" placeholder="Digite seu endereço" required>
+            <textarea id="comentario" placeholder="Adicione um comentário (opcional)"></textarea>
+            <button onclick="finalizeOrder()">Finalizar</button>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>Aceitamos cartão de crédito, débito e Pix.</p>
+        <p>Horário de funcionamento:</p>
+        <p>Seg a Quinta: 19:00 às 22:30</p>
+        <p>Sex a Domingo: 19:30 às 23:30</p>
+        <p>Estamos também no Ifood</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        let currentItem = {};
+        let cart = [];
+
+        // Animação de entrada para as seções
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const items = entry.target.querySelectorAll('.item');
+                    items.forEach((item, index) => {
+                        setTimeout(() => {
+                            item.classList.add('animate__animated', 'animate__fadeInUp');
+                        }, index * 100);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.section').forEach(section => observer.observe(section));
+
+        // Carregamento de imagens
+        document.querySelectorAll('.item img').forEach(img => {
+            if (img.complete) {
+                img.classList.add('loaded');
+            } else {
+                img.onload = () => img.classList.add('loaded');
+            }
+        });
+
+        // Abrir modal de personalização
+        function openModal(itemName, basePrice) {
+            currentItem = { name: itemName, basePrice: basePrice, carne: '', molhos: [], acrescimos: [], batata: '', bebida: '' };
+            document.getElementById('modalTitle').innerText = itemName;
+            const modal = document.getElementById('itemModal');
+            modal.classList.add('modal-open');
+        }
+
+        // Adicionar item diretamente ao carrinho
+        function addToCartDirectly(itemName, basePrice) {
+            cart.push({ name: itemName, basePrice: basePrice });
+            updateCart();
+            pulseCartButton();
+        }
+
+        // Fechar modal
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('modal-open');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        // Abrir carrinho
+        function openCart() {
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+
+        // Limitar escolha de molhos
+        function limitMolhos(checkbox) {
+            const molhos = document.querySelectorAll('input[name="molho"]:checked');
+            if (molhos.length > 3) {
+                checkbox.checked = false;
+                alert('Você pode escolher até 3 molhos!');
+            }
+        }
+
+        // Limitar escolha de batatas
+        function limitBatata(checkbox) {
+            const batatas = document.querySelectorAll('input[name="batata"]:checked');
+            if (batatas.length > 1) {
+                checkbox.checked = false;
+                alert('Você pode escolher apenas 1 opção de batata!');
+            }
+        }
+
+        // Limitar escolha de bebidas
+        function limitBebida(checkbox) {
+            const bebidas = document.querySelectorAll('input[name="bebida"]:checked');
+            if (bebidas.length > 1) {
+                checkbox.checked = false;
+                alert('Você pode escolher apenas 1 bebida!');
+            }
+        }
+
+        // Adicionar item personalizado ao carrinho
+        function addToCart() {
+            const carne = document.querySelector('input[name="carne"]:checked');
+            if (!carne) {
+                alert('Por favor, escolha uma opção de carne!');
+                return;
+            }
+            currentItem.carne = carne.value;
+            currentItem.molhos = Array.from(document.querySelectorAll('input[name="molho"]:checked')).map(m => m.value);
+            currentItem.acrescimos = Array.from(document.querySelectorAll('input[name="acrescimo"]:checked')).map(a => a.value);
+            currentItem.batata = document.querySelector('input[name="batata"]:checked')?.value || '';
+            currentItem.bebida = document.querySelector('input[name="bebida"]:checked')?.value || '';
+            cart.push(currentItem);
+            document.getElementById('itemModal').classList.remove('modal-open');
+            setTimeout(() => {
+                document.getElementById('itemModal').style.display = 'none';
+            }, 300);
+            updateCart();
+            pulseCartButton();
+        }
+
+        // Remover item do carrinho
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        // Atualizar visualização do carrinho
+        function updateCart() {
+            const cartItemsDiv = document.getElementById('cartItems');
+            let total = 0;
+            cartItemsDiv.innerHTML = '';
+            cart.forEach((item, index) => {
+                let itemTotal = item.basePrice;
+                if (item.carne && item.carne.includes('+R$')) {
+                    itemTotal += parseFloat(item.carne.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                }
+                if (item.acrescimos) {
+                    item.acrescimos.forEach(acrescimo => {
+                        itemTotal += parseFloat(acrescimo.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                    });
+                }
+                if (item.batata && item.batata.includes('+R$')) {
+                    itemTotal += parseFloat(item.batata.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                }
+                if (item.bebida && item.bebida.includes('+R$')) {
+                    itemTotal += parseFloat(item.bebida.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                }
+                total += itemTotal;
+                cartItemsDiv.innerHTML += `
+                    <div class="cart-item">
+                        <strong>${item.name}</strong><br>
+                        ${item.carne ? `Carne: ${item.carne}<br>` : ''}
+                        ${item.molhos ? `Molhos: ${item.molhos.join(', ') || 'Nenhum'}<br>` : ''}
+                        ${item.acrescimos ? `Acréscimos: ${item.acrescimos.join(', ') || 'Nenhum'}<br>` : ''}
+                        ${item.batata ? `Batata: ${item.batata}<br>` : ''}
+                        ${item.bebida ? `Bebida: ${item.bebida}<br>` : ''}
+                        Subtotal: R$ ${itemTotal.toFixed(2).replace('.', ',')}<br>
+                        <button onclick="removeFromCart(${index})">Remover</button>
+                    </div>
+                `;
+            });
+            document.getElementById('cartTotal').innerText = total.toFixed(2).replace('.', ',');
+        }
+
+        // Animação do botão do carrinho
+        function pulseCartButton() {
+            const cartBtn = document.querySelector('.cart-button');
+            cartBtn.classList.add('pulse');
+            setTimeout(() => cartBtn.classList.remove('pulse'), 500);
+        }
+
+        // Finalizar pedido via WhatsApp
+        function finalizeOrder() {
+            const endereco = document.getElementById('endereco').value.trim();
+            const comentario = document.getElementById('comentario').value.trim();
+            if (!endereco) {
+                alert('Por favor, informe seu endereço!');
+                return;
+            }
+            if (cart.length === 0) {
+                alert('Seu carrinho está vazio!');
+                return;
+            }
+            let message = `*Novo Pedido*\n\n`;
+            let total = 0;
+            cart.forEach(item => {
+                let itemTotal = item.basePrice;
+                if (item.carne && item.carne.includes('+R$')) {
+                    itemTotal += parseFloat(item.carne.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                }
+                if (item.acrescimos) {
+                    item.acrescimos.forEach(acrescimo => {
+                        itemTotal += parseFloat(acrescimo.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                    });
+                }
+                if (item.batata && item.batata.includes('+R$')) {
+                    itemTotal += parseFloat(item.batata.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                }
+                if (item.bebida && item.bebida.includes('+R$')) {
+                    itemTotal += parseFloat(item.bebida.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                }
+                message += `*${item.name}*\n`;
+                if (item.carne) message += `Carne: ${item.carne}\n`;
+                if (item.molhos) message += `Molhos: ${item.molhos.join(', ') || 'Nenhum'}\n`;
+                if (item.acrescimos) message += `Acréscimos: ${item.acrescimos.join(', ') || 'Nenhum'}\n`;
+                if (item.batata) message += `Batata: ${item.batata}\n`;
+                if (item.bebida) message += `Bebida: ${item.bebida}\n`;
+                message += `Subtotal: R$ ${itemTotal.toFixed(2).replace('.', ',')}\n\n`;
+                total += itemTotal;
+            });
+            message += `*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n`;
+            message += `*Endereço:* ${endereco}\n`;
+            if (comentario) {
+                message += `\n*Comentários do Cliente:*\n${comentario}\n`;
+            }
+            const whatsappLink = `https://api.whatsapp.com/send?phone=5511911653936&text=${encodeURIComponent(message)}`;
+            window.open(whatsappLink, '_blank');
+        }
+    </script>
+</body>
+</html>
