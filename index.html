@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        /* Reset básico */
         * {
             margin: 0;
             padding: 0;
@@ -61,9 +60,9 @@
             box-shadow: 0 0 15px #d4af37;
         }
         .item img {
-            width: 30%; /* Tamanho padrão para telas maiores */
-            height: auto; /* Mantém a proporção */
-            object-fit: cover; /* Garante que a imagem preencha o espaço sem distorcer */
+            width: 30%;
+            height: auto;
+            object-fit: cover;
             border-radius: 10px;
             opacity: 0;
             transition: opacity 0.5s ease;
@@ -142,17 +141,43 @@
             margin: 15px 0 5px;
         }
         .modal-content label {
-            display: block;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin: 8px 0;
             color: #fff;
             font-size: 0.9em;
         }
-        .modal-content input[type="radio"],
+        .modal-content .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .modal-content .quantity-controls button {
+            background-color: #d4af37;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            width: 30px;
+            height: 30px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .modal-content .quantity-controls button:hover {
+            background-color: #b8972e;
+        }
+        .modal-content .quantity-controls span {
+            font-size: 1em;
+            color: #fff;
+            width: 30px;
+            text-align: center;
+        }
         .modal-content input[type="checkbox"] {
             margin-right: 10px;
             accent-color: #d4af37;
         }
-        .modal-content button {
+        .modal-content button.add-to-cart {
             background-color: #d4af37;
             color: #000;
             padding: 12px 20px;
@@ -164,7 +189,7 @@
             font-weight: 600;
             transition: background-color 0.3s;
         }
-        .modal-content button:hover {
+        .modal-content button.add-to-cart:hover {
             background-color: #b8972e;
         }
         .cart-button {
@@ -291,16 +316,16 @@
                 font-size: 1.5em;
             }
             .item {
-                flex-direction: column; /* Itens empilhados no mobile */
-                align-items: center; /* Centraliza tudo */
+                flex-direction: column;
+                align-items: center;
                 gap: 10px;
             }
             .item img {
-                width: 100%; /* Ocupa toda a largura do item no mobile */
-                max-width: 200px; /* Limita o tamanho máximo para não exagerar */
+                width: 100%;
+                max-width: 200px;
             }
             .item-details {
-                text-align: center; /* Centraliza o texto no mobile */
+                text-align: center;
             }
             .item button {
                 width: 100%;
@@ -339,7 +364,8 @@
                 padding: 20px;
             }
             .item-details h3 {
-                font-size: 1.2em;
+                font-size: 1.2em 
+
             }
             .item-details p {
                 font-size: 1em;
@@ -351,14 +377,10 @@
     </style>
 </head>
 <body>
-    <!-- Cabeçalho -->
     <header>
         <img src="logo2.png" alt="Logotipo da Hamburgueria">
     </header>
-
-    <!-- Menu -->
     <div class="menu">
-        <!-- Hamburgueres Podrão -->
         <div class="section">
             <h2>Hamburgueres Podrão</h2>
             <div class="item">
@@ -434,8 +456,6 @@
                 <button onclick="openModal('Explosão Calabresa', 34.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
             </div>
         </div>
-
-        <!-- Diadorin Furioso -->
         <div class="section">
             <h2>Diadorin Furioso</h2>
             <div class="item">
@@ -466,8 +486,6 @@
                 <button onclick="openModal('Furioso Apocalipse', 47.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
             </div>
         </div>
-
-        <!-- Combo na Caixa com Podrão -->
         <div class="section">
             <h2>Combo na Caixa com Podrão</h2>
             <div class="item">
@@ -498,10 +516,6 @@
                 <button onclick="openModal('Trinca Pesada', 147.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
             </div>
         </div>
-
-
-
-        <!-- Combos na Caixa com Lanches -->
         <div class="section">
             <h2>Combos na Caixa com Lanches</h2>
             <div class="item">
@@ -550,8 +564,6 @@
                 <button onclick="openModal('Chama no Zap: Combo na Área', 145.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
             </div>
         </div>
-
-        <!-- Lanches -->
         <div class="section">
             <h2>Lanches</h2>
             <div class="item">
@@ -600,8 +612,6 @@
                 <button onclick="openModal('Cheddar no Grau', 52.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
             </div>
         </div>
-
-        <!-- Smash Burguer -->
         <div class="section">
             <h2>Smash Burguer</h2>
             <div class="item">
@@ -632,8 +642,6 @@
                 <button onclick="openModal('Smash Suprema', 20.99)"><i class="fas fa-cart-plus"></i> Adicionar</button>
             </div>
         </div>
-
-        <!-- Molhos -->
         <div class="section">
             <h2>Molhos</h2>
             <div class="item">
@@ -673,8 +681,6 @@
                 <button onclick="addToCartDirectly('Maionese temperada (da casa)', 1.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
             </div>
         </div>
-
-        <!-- Bebidas -->
         <div class="section">
             <h2>Bebidas</h2>
             <div class="item">
@@ -732,8 +738,6 @@
                 <button onclick="addToCartDirectly('Coca-cola 2,5L', 21.00)"><i class="fas fa-cart-plus"></i> Adicionar</button>
             </div>
         </div>
-
-        <!-- Sobremesas -->
         <div class="section">
             <h2>Sobremesas</h2>
             <div class="item">
@@ -765,18 +769,44 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal de Personalização -->
     <div class="modal" id="itemModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('itemModal')">×</span>
             <h3 id="modalTitle"></h3>
             <div>
-                <h4>Carne (Escolha 1 opção - OBRIGATÓRIO)</h4>
-                <label><input type="radio" name="carne" value="Hamburguer Industrializado" required>Hamburguer Industrializado</label>
-                <label><input type="radio" name="carne" value="Hamburguer Artesanal 100g (+R$ 4,00)">Hamburguer Artesanal 100g (+R$ 4,00)</label>
-                <label><input type="radio" name="carne" value="Hamburguer Linguiça 100g (+R$ 4,00)">Hamburguer Linguiça 100g (+R$ 4,00)</label>
-                <label><input type="radio" name="carne" value="Frango Empanado (Stake) (+R$ 4,00)">Frango Empanado (Stake) (+R$ 4,00)</label>
+                <h4>Carne (Pelo menos 1 opção - OBRIGATÓRIO)</h4>
+                <label>
+                    Hamburguer Industrializado
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('carne', 'Hamburguer Industrializado', -1)">-</button>
+                        <span id="qty-carne-Hamburguer Industrializado">0</span>
+                        <button onclick="updateQuantity('carne', 'Hamburguer Industrializado', 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    Hamburguer Artesanal 100g (+R$ 4,00)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('carne', 'Hamburguer Artesanal 100g (+R$ 4,00)', -1)">-</button>
+                        <span id="qty-carne-Hamburguer Artesanal 100g (+R$ 4,00)">0</span>
+                        <button onclick="updateQuantity('carne', 'Hamburguer Artesanal 100g (+R$ 4,00)', 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    Hamburguer Linguiça 100g (+R$ 4,00)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('carne', 'Hamburguer Linguiça 100g (+R$ 4,00)', -1)">-</button>
+                        <span id="qty-carne-Hamburguer Linguiça 100g (+R$ 4,00)">0</span>
+                        <button onclick="updateQuantity('carne', 'Hamburguer Linguiça 100g (+R$ 4,00)', 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    Frango Empanado (Stake) (+R$ 4,00)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('carne', 'Frango Empanado (Stake) (+R$ 4,00)', -1)">-</button>
+                        <span id="qty-carne-Frango Empanado (Stake) (+R$ 4,00)">0</span>
+                        <button onclick="updateQuantity('carne', 'Frango Empanado (Stake) (+R$ 4,00)', 1)">+</button>
+                    </div>
+                </label>
             </div>
             <div>
                 <h4>Molhos (Escolha até 3 opções)</h4>
@@ -803,29 +833,81 @@
                 <label><input type="checkbox" name="acrescimo" value="Salcicha (+R$ 2,50)">Salcicha (+R$ 2,50)</label>
             </div>
             <div>
-                <h4>Que tal uma Batata para acompanhar? (Escolha até 1 opção)</h4>
-                <label><input type="checkbox" name="batata" value="Batata Frita Média (+R$ 9,99)" onchange="limitBatata(this)">Batata Frita Média (+R$ 9,99)</label>
-                <label><input type="checkbox" name="batata" value="Batata Frita com Cheddar e Bacon Média (+R$ 23,99)" onchange="limitBatata(this)">Batata Frita com Cheddar e Bacon Média (+R$ 23,99)</label>
-                <label><input type="checkbox" name="batata" value="Batata Maluca (300g com calabresa, bacon, cheddar e requeijão) (+R$ 24,90)" onchange="limitBatata(this)">Batata Maluca (300g com calabresa, bacon, cheddar e requeijão) (+R$ 24,90)</label>
+                <h4>Que tal uma Batata para acompanhar?</h4>
+                <label>
+                    Batata Frita Média (+R$ 9,99)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('batata', 'Batata Frita Média (+R$ 9,99)', -1)">-</button>
+                        <span id="qty-batata-Batata Frita Média (+R$ 9,99)">0</span>
+                        <button onclick="updateQuantity('batata', 'Batata Frita Média (+R$ 9,99)', 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    Batata Frita com Cheddar e Bacon Média (+R$ 23,99)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('batata', 'Batata Frita com Cheddar e Bacon Média (+R$ 23,99)', -1)">-</button>
+                        <span id="qty-batata-Batata Frita com Cheddar e Bacon Média (+R$ 23,99)">0</span>
+                        <button onclick="updateQuantity('batata', 'Batata Frita com Cheddar e Bacon Média (+R$ 23,99)', 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    Batata Maluca (300g com calabresa, bacon, cheddar e requeijão) (+R$ 24,90)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('batata', 'Batata Maluca (300g com calabresa, bacon, cheddar e requeijão) (+R$ 24,90)', -1)">-</button>
+                        <span id="qty-batata-Batata Maluca (300g com calabresa, bacon, cheddar e requeijão) (+R$ 24,90)">0</span>
+                        <button onclick="updateQuantity('batata', 'Batata Maluca (300g com calabresa, bacon, cheddar e requeijão) (+R$ 24,90)', 1)">+</button>
+                    </div>
+                </label>
             </div>
             <div>
-                <h4>Algo para Beber? (Escolha até 1 opção)</h4>
-                <label><input type="checkbox" name="bebida" value="Coca-Cola (+R$ 7,00)" onchange="limitBebida(this)">Coca-Cola (+R$ 7,00)</label>
-                <label><input type="checkbox" name="bebida" value="Fanta Uva 350ml (+R$ 7,00)" onchange="limitBebida(this)">Fanta Uva 350ml (+R$ 7,00)</label>
-                <label><input type="checkbox" name="bebida" value="Guarana Antarctica Lata (+R$ 7,00)" onchange="limitBebida(this)">Guarana Antarctica Lata (+R$ 7,00)</label>
-                <label><input type="checkbox" name="bebida" value="Suco Natural - Manga 500ml (+R$ 15,00)" onchange="limitBebida(this)">Suco Natural - Manga 500ml (+R$ 15,00)</label>
-                <label><input type="checkbox" name="bebida" value="Suco Natural - Goiaba 500ml (+R$ 15,00)" onchange="limitBebida(this)">Suco Natural - Goiaba 500ml (+R$ 15,00)</label>
+                <h4>Algo para Beber?</h4>
+                <label>
+                    Coca-Cola (+R$ 7,00)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('bebida', 'Coca-Cola (+R$ 7,00)', -1)">-</button>
+                        <span id="qty-bebida-Coca-Cola (+R$ 7,00)">0</span>
+                        <button onclick="updateQuantity('bebida', 'Coca-Cola (+R$ 7,00)', 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    Fanta Uva 350ml (+R$ 7,00)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('bebida', 'Fanta Uva 350ml (+R$ 7,00)', -1)">-</button>
+                        <span id="qty-bebida-Fanta Uva 350ml (+R$ 7,00)">0</span>
+                        <button onclick="updateQuantity('bebida', 'Fanta Uva 350ml (+R$ 7,00)', 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    Guarana Antarctica Lata (+R$ 7,00)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('bebida', 'Guarana Antarctica Lata (+R$ 7,00)', -1)">-</button>
+                        <span id="qty-bebida-Guarana Antarctica Lata (+R$ 7,00)">0</span>
+                        <button onclick="updateQuantity('bebida', 'Guarana Antarctica Lata (+R$ 7,00)', 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    Suco Natural - Manga 500ml (+R$ 15,00)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('bebida', 'Suco Natural - Manga 500ml (+R$ 15,00)', -1)">-</button>
+                        <span id="qty-bebida-Suco Natural - Manga 500ml (+R$ 15,00)">0</span>
+                        <button onclick="updateQuantity('bebida', 'Suco Natural - Manga 500ml (+R$ 15,00)', 1)">+</button>
+                    </div>
+                </label>
+                <label>
+                    Suco Natural - Goiaba 500ml (+R$ 15,00)
+                    <div class="quantity-controls">
+                        <button onclick="updateQuantity('bebida', 'Suco Natural - Goiaba 500ml (+R$ 15,00)', -1)">-</button>
+                        <span id="qty-bebida-Suco Natural - Goiaba 500ml (+R$ 15,00)">0</span>
+                        <button onclick="updateQuantity('bebida', 'Suco Natural - Goiaba 500ml (+R$ 15,00)', 1)">+</button>
+                    </div>
+                </label>
             </div>
-            <button onclick="addToCart()">Adicionar ao Carrinho</button>
+            <button class="add-to-cart" onclick="addToCart()">Adicionar ao Carrinho</button>
         </div>
     </div>
-
-    <!-- Botão do Carrinho -->
     <div class="cart-button" onclick="openCart()">
         <i class="fas fa-shopping-cart"></i>
     </div>
-
-    <!-- Modal do Carrinho -->
     <div class="cart-modal" id="cartModal">
         <div class="cart-modal-content">
             <span class="close-btn" onclick="closeModal('cartModal')">×</span>
@@ -837,8 +919,6 @@
             <button onclick="finalizeOrder()">Finalizar</button>
         </div>
     </div>
-
-    <!-- Rodapé -->
     <footer>
         <p>Aceitamos cartão de crédito, débito e Pix.</p>
         <p>Horário de funcionamento:</p>
@@ -846,13 +926,9 @@
         <p>Sex a Domingo: 19:30 às 23:30</p>
         <p>Estamos também no Ifood</p>
     </footer>
-
-    <!-- JavaScript -->
     <script>
         let currentItem = {};
         let cart = [];
-
-        // Animação de entrada para as seções
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -867,8 +943,6 @@
             });
         }, { threshold: 0.1 });
         document.querySelectorAll('.section').forEach(section => observer.observe(section));
-
-        // Carregamento de imagens
         document.querySelectorAll('.item img').forEach(img => {
             if (img.complete) {
                 img.classList.add('loaded');
@@ -876,23 +950,31 @@
                 img.onload = () => img.classList.add('loaded');
             }
         });
-
-        // Abrir modal de personalização
         function openModal(itemName, basePrice) {
-            currentItem = { name: itemName, basePrice: basePrice, carne: '', molhos: [], acrescimos: [], batata: '', bebida: '' };
+            currentItem = {
+                name: itemName,
+                basePrice: basePrice,
+                carnes: [],
+                molhos: [],
+                acrescimos: [],
+                batatas: [],
+                bebidas: []
+            };
             document.getElementById('modalTitle').innerText = itemName;
             const modal = document.getElementById('itemModal');
             modal.classList.add('modal-open');
+            resetQuantities();
         }
-
-        // Adicionar item diretamente ao carrinho
+        function resetQuantities() {
+            document.querySelectorAll('.quantity-controls span').forEach(span => {
+                span.innerText = '0';
+            });
+        }
         function addToCartDirectly(itemName, basePrice) {
             cart.push({ name: itemName, basePrice: basePrice });
             updateCart();
             pulseCartButton();
         }
-
-        // Fechar modal
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             modal.classList.remove('modal-open');
@@ -900,13 +982,15 @@
                 modal.style.display = 'none';
             }, 300);
         }
-
-        // Abrir carrinho
         function openCart() {
             document.getElementById('cartModal').style.display = 'flex';
         }
-
-        // Limitar escolha de molhos
+        function updateQuantity(category, item, change) {
+            const span = document.getElementById(`qty-${category}-${item}`);
+            let qty = parseInt(span.innerText);
+            qty = Math.max(0, qty + change);
+            span.innerText = qty;
+        }
         function limitMolhos(checkbox) {
             const molhos = document.querySelectorAll('input[name="molho"]:checked');
             if (molhos.length > 3) {
@@ -914,82 +998,85 @@
                 alert('Você pode escolher até 3 molhos!');
             }
         }
-
-        // Limitar escolha de batatas
-        function limitBatata(checkbox) {
-            const batatas = document.querySelectorAll('input[name="batata"]:checked');
-            if (batatas.length > 1) {
-                checkbox.checked = false;
-                alert('Você pode escolher apenas 1 opção de batata!');
-            }
+        function getSelectedItems(category) {
+            const items = [];
+            document.querySelectorAll(`#itemModal [id^='qty-${category}-']`).forEach(span => {
+                const qty = parseInt(span.innerText);
+                if (qty > 0) {
+                    const itemName = span.id.replace(`qty-${category}-`, '');
+                    items.push({ name: itemName, quantity: qty });
+                }
+            });
+            return items;
         }
-
-        // Limitar escolha de bebidas
-        function limitBebida(checkbox) {
-            const bebidas = document.querySelectorAll('input[name="bebida"]:checked');
-            if (bebidas.length > 1) {
-                checkbox.checked = false;
-                alert('Você pode escolher apenas 1 bebida!');
-            }
-        }
-
-        // Adicionar item personalizado ao carrinho
         function addToCart() {
-            const carne = document.querySelector('input[name="carne"]:checked');
-            if (!carne) {
-                alert('Por favor, escolha uma opção de carne!');
+            currentItem.carnes = getSelectedItems('carne');
+            if (currentItem.carnes.length === 0) {
+                alert('Por favor, escolha pelo menos uma opção de carne!');
                 return;
             }
-            currentItem.carne = carne.value;
             currentItem.molhos = Array.from(document.querySelectorAll('input[name="molho"]:checked')).map(m => m.value);
             currentItem.acrescimos = Array.from(document.querySelectorAll('input[name="acrescimo"]:checked')).map(a => a.value);
-            currentItem.batata = document.querySelector('input[name="batata"]:checked')?.value || '';
-            currentItem.bebida = document.querySelector('input[name="bebida"]:checked')?.value || '';
+            currentItem.batatas = getSelectedItems('batata');
+            currentItem.bebidas = getSelectedItems('bebida');
             cart.push(currentItem);
-            document.getElementById('itemModal').classList.remove('modal-open');
-            setTimeout(() => {
-                document.getElementById('itemModal').style.display = 'none';
-            }, 300);
+            closeModal('itemModal');
             updateCart();
             pulseCartButton();
         }
-
-        // Remover item do carrinho
         function removeFromCart(index) {
             cart.splice(index, 1);
             updateCart();
         }
-
-        // Atualizar visualização do carrinho
         function updateCart() {
             const cartItemsDiv = document.getElementById('cartItems');
             let total = 0;
             cartItemsDiv.innerHTML = '';
             cart.forEach((item, index) => {
                 let itemTotal = item.basePrice;
-                if (item.carne && item.carne.includes('+R$')) {
-                    itemTotal += parseFloat(item.carne.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                }
-                if (item.acrescimos) {
-                    item.acrescimos.forEach(acrescimo => {
-                        itemTotal += parseFloat(acrescimo.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                let details = `<strong>${item.name}</strong><br>`;
+                if (item.carnes) {
+                    details += 'Carnes:<br>';
+                    item.carnes.forEach(carne => {
+                        let carneCost = 0;
+                        if (carne.name.includes('+R$')) {
+                            carneCost = parseFloat(carne.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                            itemTotal += carneCost * carne.quantity;
+                        }
+                        details += `- ${carne.name} (x${carne.quantity})<br>`;
                     });
                 }
-                if (item.batata && item.batata.includes('+R$')) {
-                    itemTotal += parseFloat(item.batata.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                if (item.molhos) {
+                    details += `Molhos: ${item.molhos.join(', ') || 'Nenhum'}<br>`;
                 }
-                if (item.bebida && item.bebida.includes('+R$')) {
-                    itemTotal += parseFloat(item.bebida.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                if (item.acrescimos) {
+                    details += 'Acréscimos:<br>';
+                    item.acrescimos.forEach(acrescimo => {
+                        const acrescimoCost = parseFloat(acrescimo.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                        itemTotal += acrescimoCost;
+                        details += `- ${acrescimo}<br>`;
+                    });
+                }
+                if (item.batatas) {
+                    details += 'Batatas:<br>';
+                    item.batatas.forEach(batata => {
+                        const batataCost = parseFloat(batata.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                        itemTotal += batataCost * batata.quantity;
+                        details += `- ${batata.name} (x${batata.quantity})<br>`;
+                    });
+                }
+                if (item.bebidas) {
+                    details += 'Bebidas:<br>';
+                    item.bebidas.forEach(bebida => {
+                        const bebidaCost = parseFloat(bebida.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                        itemTotal += bebidaCost * bebida.quantity;
+                        details += `- ${bebida.name} (x${bebida.quantity})<br>`;
+                    });
                 }
                 total += itemTotal;
                 cartItemsDiv.innerHTML += `
                     <div class="cart-item">
-                        <strong>${item.name}</strong><br>
-                        ${item.carne ? `Carne: ${item.carne}<br>` : ''}
-                        ${item.molhos ? `Molhos: ${item.molhos.join(', ') || 'Nenhum'}<br>` : ''}
-                        ${item.acrescimos ? `Acréscimos: ${item.acrescimos.join(', ') || 'Nenhum'}<br>` : ''}
-                        ${item.batata ? `Batata: ${item.batata}<br>` : ''}
-                        ${item.bebida ? `Bebida: ${item.bebida}<br>` : ''}
+                        ${details}
                         Subtotal: R$ ${itemTotal.toFixed(2).replace('.', ',')}<br>
                         <button onclick="removeFromCart(${index})">Remover</button>
                     </div>
@@ -997,15 +1084,11 @@
             });
             document.getElementById('cartTotal').innerText = total.toFixed(2).replace('.', ',');
         }
-
-        // Animação do botão do carrinho
         function pulseCartButton() {
             const cartBtn = document.querySelector('.cart-button');
             cartBtn.classList.add('pulse');
             setTimeout(() => cartBtn.classList.remove('pulse'), 500);
         }
-
-        // Finalizar pedido via WhatsApp
         function finalizeOrder() {
             const endereco = document.getElementById('endereco').value.trim();
             const comentario = document.getElementById('comentario').value.trim();
@@ -1021,26 +1104,45 @@
             let total = 0;
             cart.forEach(item => {
                 let itemTotal = item.basePrice;
-                if (item.carne && item.carne.includes('+R$')) {
-                    itemTotal += parseFloat(item.carne.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                }
-                if (item.acrescimos) {
-                    item.acrescimos.forEach(acrescimo => {
-                        itemTotal += parseFloat(acrescimo.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                message += `*${item.name}*\n`;
+                if (item.carnes) {
+                    message += `Carnes:\n`;
+                    item.carnes.forEach(carne => {
+                        let carneCost = 0;
+                        if (carne.name.includes('+R$')) {
+                            carneCost = parseFloat(carne.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                            itemTotal += carneCost * carne.quantity;
+                        }
+                        message += `- ${carne.name} (x${carne.quantity})\n`;
                     });
                 }
-                if (item.batata && item.batata.includes('+R$')) {
-                    itemTotal += parseFloat(item.batata.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                if (item.molhos) {
+                    message += `Molhos: ${item.molhos.join(', ') || 'Nenhum'}\n`;
                 }
-                if (item.bebida && item.bebida.includes('+R$')) {
-                    itemTotal += parseFloat(item.bebida.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                if (item.acrescimos) {
+                    message += `Acréscimos:\n`;
+                    item.acrescimos.forEach(acrescimo => {
+                        const acrescimoCost = parseFloat(acrescimo.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                        itemTotal += acrescimoCost;
+                        message += `- ${acrescimo}\n`;
+                    });
                 }
-                message += `*${item.name}*\n`;
-                if (item.carne) message += `Carne: ${item.carne}\n`;
-                if (item.molhos) message += `Molhos: ${item.molhos.join(', ') || 'Nenhum'}\n`;
-                if (item.acrescimos) message += `Acréscimos: ${item.acrescimos.join(', ') || 'Nenhum'}\n`;
-                if (item.batata) message += `Batata: ${item.batata}\n`;
-                if (item.bebida) message += `Bebida: ${item.bebida}\n`;
+                if (item.batatas) {
+                    message += `Batatas:\n`;
+                    item.batatas.forEach(batata => {
+                        const batataCost = parseFloat(batata.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                        itemTotal += batataCost * batata.quantity;
+                        message += `- ${batata.name} (x${batata.quantity})\n`;
+                    });
+                }
+                if (item.bebidas) {
+                    message += `Bebidas:\n`;
+                    item.bebidas.forEach(bebida => {
+                        const bebidaCost = parseFloat(bebida.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
+                        itemTotal += bebidaCost * bebida.quantity;
+                        message += `- ${bebida.name} (x${bebida.quantity})\n`;
+                    });
+                }
                 message += `Subtotal: R$ ${itemTotal.toFixed(2).replace('.', ',')}\n\n`;
                 total += itemTotal;
             });
