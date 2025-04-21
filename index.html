@@ -396,7 +396,7 @@
                 <img src="bur2.jpg" alt="Hamburguer Podrão">
                 <div class="item-details">
                     <h3>Explosão da Rua 3.0</h3>
-                    <p>Pão, 2 carnes, bacon, calabresa, 2 ovos, 2 queijos, 2 presuntos, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <p>Pão, carne, bacon, calabresa, ovo, queijo, presunto, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
                     <span>R$ 37,90</span>
                 </div>
                 <button onclick="openModal('Explosão da Rua 3.0', 37.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
@@ -405,7 +405,7 @@
                 <img src="bur3.jpg" alt="Hamburguer Podrão">
                 <div class="item-details">
                     <h3>Apocalanche</h3>
-                    <p>Pão, 3 carnes, bacon, calabresa, 3 ovos, 3 queijos, 3 presuntos, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <p>Pão, 2 carnes, bacon, calabresa, 2 ovos, 2 queijos, 2 presuntos, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
                     <span>R$ 39,90</span>
                 </div>
                 <button onclick="openModal('Apocalanche', 39.90)"><i class="fas fa-cart-plus"></i> Adicionar</button>
@@ -414,7 +414,7 @@
                 <img src="bur4.jpg" alt="Hamburguer Podrão">
                 <div class="item-details">
                     <h3>Bacon do Capeta</h3>
-                    <p>Pão, carne, bacon, queijo, presunto, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
+                    <p>Pão, 3 carnes, bacon, calabresa, 3 ovos, 3 queijos, 3 presuntos, alface, tomate, cebola, milho, ervilha, queijo ralado, azeitona, ovo de codorna, batata palha e 3 molhos.</p>
                     <span>R$ 33,50</span>
                 </div>
                 <button onclick="openModal('Bacon do Capeta', 33.50)"><i class="fas fa-cart-plus"></i> Adicionar</button>
@@ -927,233 +927,278 @@
         <p>Estamos também no Ifood</p>
     </footer>
     <script>
-        let currentItem = {};
-        let cart = [];
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const items = entry.target.querySelectorAll('.item');
-                    items.forEach((item, index) => {
-                        setTimeout(() => {
-                            item.classList.add('animate__animated', 'animate__fadeInUp');
-                        }, index * 100);
-                    });
-                    observer.unobserve(entry.target);
-                }
+      let currentItem = {};
+let cart = [];
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const items = entry.target.querySelectorAll('.item');
+            items.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('animate__animated', 'animate__fadeInUp');
+                }, index * 100);
             });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.section').forEach(section => observer.observe(section));
-        document.querySelectorAll('.item img').forEach(img => {
-            if (img.complete) {
-                img.classList.add('loaded');
-            } else {
-                img.onload = () => img.classList.add('loaded');
-            }
-        });
-        function openModal(itemName, basePrice) {
-            currentItem = {
-                name: itemName,
-                basePrice: basePrice,
-                carnes: [],
-                molhos: [],
-                acrescimos: [],
-                batatas: [],
-                bebidas: []
-            };
-            document.getElementById('modalTitle').innerText = itemName;
-            const modal = document.getElementById('itemModal');
-            modal.classList.add('modal-open');
-            resetQuantities();
+            observer.unobserve(entry.target);
         }
-        function resetQuantities() {
-            document.querySelectorAll('.quantity-controls span').forEach(span => {
-                span.innerText = '0';
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.section').forEach(section => observer.observe(section));
+document.querySelectorAll('.item img').forEach(img => {
+    if (img.complete) {
+        img.classList.add('loaded');
+    } else {
+        img.onload = () => img.classList.add('loaded');
+    }
+});
+
+function openModal(itemName, basePrice) {
+    currentItem = {
+        name: itemName,
+        basePrice: basePrice,
+        carnes: [],
+        molhos: [],
+        acrescimos: [],
+        batatas: [],
+        bebidas: []
+    };
+    document.getElementById('modalTitle').innerText = itemName;
+    const modal = document.getElementById('itemModal');
+    modal.style.display = 'flex';
+    setTimeout(() => modal.classList.add('modal-open'), 10);
+    resetQuantities();
+}
+
+function resetQuantities() {
+    document.querySelectorAll('.quantity-controls span').forEach(span => {
+        span.innerText = '0';
+    });
+}
+
+function addToCartDirectly(itemName, basePrice) {
+    cart.push({ name: itemName, basePrice: basePrice });
+    updateCart();
+    pulseCartButton();
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('modal-open');
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+}
+
+function openCart() {
+    const cartModal = document.getElementById('cartModal');
+    cartModal.style.display = 'flex';
+    setTimeout(() => cartModal.classList.add('modal-open'), 10);
+}
+
+function updateQuantity(category, item, change) {
+    const span = document.getElementById(`qty-${category}-${item}`);
+    let qty = parseInt(span.innerText);
+    qty = Math.max(0, qty + change);
+    span.innerText = qty;
+
+    if (!currentItem[category]) {
+        currentItem[category] = [];
+    }
+    const existingItem = currentItem[category].find(i => i.name === item);
+    if (existingItem) {
+        existingItem.quantity = qty;
+        if (qty === 0) {
+            currentItem[category] = currentItem[category].filter(i => i.name !== item);
+        }
+    } else if (qty > 0) {
+        currentItem[category].push({ name: item, quantity: qty });
+    }
+}
+
+function limitMolhos(checkbox) {
+    const molhos = document.querySelectorAll('input[name="molho"]:checked');
+    if (molhos.length > 3) {
+        checkbox.checked = false;
+        alert('Você pode escolher até 3 molhos!');
+    }
+}
+
+function limitAcrescimos(checkbox) {
+    const acrescimos = document.querySelectorAll('input[name="acrescimo"]:checked');
+    if (acrescimos.length > 10) {
+        checkbox.checked = false;
+        alert('Você pode escolher até 10 acréscimos!');
+    }
+}
+
+function parsePrice(text) {
+    const match = text.match(/\+R\$ ([\d,\.]+)/);
+    return match ? parseFloat(match[1].replace(',', '.')) : 0;
+}
+
+function addToCart() {
+    if (!currentItem.carnes || currentItem.carnes.length === 0) {
+        alert('Por favor, escolha pelo menos uma opção de carne!');
+        return;
+    }
+    currentItem.molhos = Array.from(document.querySelectorAll('input[name="molho"]:checked')).map(m => m.value);
+    currentItem.acrescimos = Array.from(document.querySelectorAll('input[name="acrescimo"]:checked')).map(a => a.value);
+    cart.push({ ...currentItem });
+    closeModal('itemModal');
+    updateCart();
+    pulseCartButton();
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCart();
+}
+
+function updateCart() {
+    const cartItemsDiv = document.getElementById('cartItems');
+    let total = 0;
+    cartItemsDiv.innerHTML = '';
+    cart.forEach((item, index) => {
+        let itemTotal = item.basePrice;
+        let details = `<strong>${item.name}</strong><br>`;
+        if (item.carnes) {
+            details += 'Carnes:<br>';
+            item.carnes.forEach(carne => {
+                const carneCost = parsePrice(carne.name);
+                itemTotal += carneCost * carne.quantity;
+                details += `- ${carne.name} (x${carne.quantity})<br>`;
             });
         }
-        function addToCartDirectly(itemName, basePrice) {
-            cart.push({ name: itemName, basePrice: basePrice });
-            updateCart();
-            pulseCartButton();
+        if (item.molhos) {
+            details += `Molhos: ${item.molhos.join(', ') || 'Nenhum'}<br>`;
         }
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('modal-open');
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
-        }
-        function openCart() {
-            document.getElementById('cartModal').style.display = 'flex';
-        }
-        function updateQuantity(category, item, change) {
-            const span = document.getElementById(`qty-${category}-${item}`);
-            let qty = parseInt(span.innerText);
-            qty = Math.max(0, qty + change);
-            span.innerText = qty;
-        }
-        function limitMolhos(checkbox) {
-            const molhos = document.querySelectorAll('input[name="molho"]:checked');
-            if (molhos.length > 3) {
-                checkbox.checked = false;
-                alert('Você pode escolher até 3 molhos!');
-            }
-        }
-        function getSelectedItems(category) {
-            const items = [];
-            document.querySelectorAll(`#itemModal [id^='qty-${category}-']`).forEach(span => {
-                const qty = parseInt(span.innerText);
-                if (qty > 0) {
-                    const itemName = span.id.replace(`qty-${category}-`, '');
-                    items.push({ name: itemName, quantity: qty });
-                }
+        if (item.acrescimos) {
+            details += 'Acréscimos:<br>';
+            item.acrescimos.forEach(acrescimo => {
+                const acrescimoCost = parsePrice(acrescimo);
+                itemTotal += acrescimoCost;
+                details += `- ${acrescimo}<br>`;
             });
-            return items;
         }
-        function addToCart() {
-            currentItem.carnes = getSelectedItems('carne');
-            if (currentItem.carnes.length === 0) {
-                alert('Por favor, escolha pelo menos uma opção de carne!');
-                return;
-            }
-            currentItem.molhos = Array.from(document.querySelectorAll('input[name="molho"]:checked')).map(m => m.value);
-            currentItem.acrescimos = Array.from(document.querySelectorAll('input[name="acrescimo"]:checked')).map(a => a.value);
-            currentItem.batatas = getSelectedItems('batata');
-            currentItem.bebidas = getSelectedItems('bebida');
-            cart.push(currentItem);
-            closeModal('itemModal');
-            updateCart();
-            pulseCartButton();
-        }
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCart();
-        }
-        function updateCart() {
-            const cartItemsDiv = document.getElementById('cartItems');
-            let total = 0;
-            cartItemsDiv.innerHTML = '';
-            cart.forEach((item, index) => {
-                let itemTotal = item.basePrice;
-                let details = `<strong>${item.name}</strong><br>`;
-                if (item.carnes) {
-                    details += 'Carnes:<br>';
-                    item.carnes.forEach(carne => {
-                        let carneCost = 0;
-                        if (carne.name.includes('+R$')) {
-                            carneCost = parseFloat(carne.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                            itemTotal += carneCost * carne.quantity;
-                        }
-                        details += `- ${carne.name} (x${carne.quantity})<br>`;
-                    });
-                }
-                if (item.molhos) {
-                    details += `Molhos: ${item.molhos.join(', ') || 'Nenhum'}<br>`;
-                }
-                if (item.acrescimos) {
-                    details += 'Acréscimos:<br>';
-                    item.acrescimos.forEach(acrescimo => {
-                        const acrescimoCost = parseFloat(acrescimo.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                        itemTotal += acrescimoCost;
-                        details += `- ${acrescimo}<br>`;
-                    });
-                }
-                if (item.batatas) {
-                    details += 'Batatas:<br>';
-                    item.batatas.forEach(batata => {
-                        const batataCost = parseFloat(batata.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                        itemTotal += batataCost * batata.quantity;
-                        details += `- ${batata.name} (x${batata.quantity})<br>`;
-                    });
-                }
-                if (item.bebidas) {
-                    details += 'Bebidas:<br>';
-                    item.bebidas.forEach(bebida => {
-                        const bebidaCost = parseFloat(bebida.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                        itemTotal += bebidaCost * bebida.quantity;
-                        details += `- ${bebida.name} (x${bebida.quantity})<br>`;
-                    });
-                }
-                total += itemTotal;
-                cartItemsDiv.innerHTML += `
-                    <div class="cart-item">
-                        ${details}
-                        Subtotal: R$ ${itemTotal.toFixed(2).replace('.', ',')}<br>
-                        <button onclick="removeFromCart(${index})">Remover</button>
-                    </div>
-                `;
+        if (item.batatas) {
+            details += 'Batatas:<br>';
+            item.batatas.forEach(batata => {
+                const batataCost = parsePrice(batata.name);
+                itemTotal += batataCost * batata.quantity;
+                details += `- ${batata.name} (x${batata.quantity})<br>`;
             });
-            document.getElementById('cartTotal').innerText = total.toFixed(2).replace('.', ',');
         }
-        function pulseCartButton() {
-            const cartBtn = document.querySelector('.cart-button');
-            cartBtn.classList.add('pulse');
-            setTimeout(() => cartBtn.classList.remove('pulse'), 500);
-        }
-        function finalizeOrder() {
-            const endereco = document.getElementById('endereco').value.trim();
-            const comentario = document.getElementById('comentario').value.trim();
-            if (!endereco) {
-                alert('Por favor, informe seu endereço!');
-                return;
-            }
-            if (cart.length === 0) {
-                alert('Seu carrinho está vazio!');
-                return;
-            }
-            let message = `*Novo Pedido*\n\n`;
-            let total = 0;
-            cart.forEach(item => {
-                let itemTotal = item.basePrice;
-                message += `*${item.name}*\n`;
-                if (item.carnes) {
-                    message += `Carnes:\n`;
-                    item.carnes.forEach(carne => {
-                        let carneCost = 0;
-                        if (carne.name.includes('+R$')) {
-                            carneCost = parseFloat(carne.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                            itemTotal += carneCost * carne.quantity;
-                        }
-                        message += `- ${carne.name} (x${carne.quantity})\n`;
-                    });
-                }
-                if (item.molhos) {
-                    message += `Molhos: ${item.molhos.join(', ') || 'Nenhum'}\n`;
-                }
-                if (item.acrescimos) {
-                    message += `Acréscimos:\n`;
-                    item.acrescimos.forEach(acrescimo => {
-                        const acrescimoCost = parseFloat(acrescimo.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                        itemTotal += acrescimoCost;
-                        message += `- ${acrescimo}\n`;
-                    });
-                }
-                if (item.batatas) {
-                    message += `Batatas:\n`;
-                    item.batatas.forEach(batata => {
-                        const batataCost = parseFloat(batata.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                        itemTotal += batataCost * batata.quantity;
-                        message += `- ${batata.name} (x${batata.quantity})\n`;
-                    });
-                }
-                if (item.bebidas) {
-                    message += `Bebidas:\n`;
-                    item.bebidas.forEach(bebida => {
-                        const bebidaCost = parseFloat(bebida.name.match(/\+R\$ (\d+,\d+)/)[1].replace(',', '.'));
-                        itemTotal += bebidaCost * bebida.quantity;
-                        message += `- ${bebida.name} (x${bebida.quantity})\n`;
-                    });
-                }
-                message += `Subtotal: R$ ${itemTotal.toFixed(2).replace('.', ',')}\n\n`;
-                total += itemTotal;
+        if (item.bebidas) {
+            details += 'Bebidas:<br>';
+            item.bebidas.forEach(bebida => {
+                const bebidaCost = parsePrice(bebida.name);
+                itemTotal += bebidaCost * bebida.quantity;
+                details += `- ${bebida.name} (x${bebida.quantity})<br>`;
             });
-            message += `*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n`;
-            message += `*Endereço:* ${endereco}\n`;
-            if (comentario) {
-                message += `\n*Comentários do Cliente:*\n${comentario}\n`;
-            }
-            const whatsappLink = `https://api.whatsapp.com/send?phone=5511911653936&text=${encodeURIComponent(message)}`;
-            window.open(whatsappLink, '_blank');
         }
+        total += itemTotal;
+        cartItemsDiv.innerHTML += `
+            <div class="cart-item">
+                ${details}
+                Subtotal: R$ ${itemTotal.toFixed(2).replace('.', ',')}<br>
+                <button onclick="removeFromCart(${index})">Remover</button>
+            </div>
+        `;
+    });
+    document.getElementById('cartTotal').innerText = total.toFixed(2).replace('.', ',');
+}
+
+function pulseCartButton() {
+    const cartBtn = document.querySelector('.cart-button');
+    cartBtn.classList.add('pulse');
+    setTimeout(() => cartBtn.classList.remove('pulse'), 500);
+}
+
+function finalizeOrder() {
+    const endereco = document.getElementById('endereco').value.trim();
+    const comentario = document.getElementById('comentario').value.trim();
+    if (!endereco) {
+        alert('Por favor, informe seu endereço!');
+        return;
+    }
+    if (cart.length === 0) {
+        alert('Seu carrinho está vazio!');
+        return;
+    }
+    let message = `*Novo Pedido*\n\n`;
+    let total = 0;
+    cart.forEach(item => {
+        let itemTotal = item.basePrice;
+        message += `*${item.name}*\n`;
+        if (item.carnes) {
+            message += `Carnes:\n`;
+            item.carnes.forEach(carne => {
+                const carneCost = parsePrice(carne.name);
+                itemTotal += carneCost * carne.quantity;
+                message += `- ${carne.name} (x${carne.quantity})\n`;
+            });
+        }
+        if (item.molhos) {
+            message += `Molhos: ${item.molhos.join(', ') || 'Nenhum'}\n`;
+        }
+        if (item.acrescimos) {
+            message += `Acréscimos:\n`;
+            item.acrescimos.forEach(acrescimo => {
+                const acrescimoCost = parsePrice(acrescimo);
+                itemTotal += acrescimoCost;
+                message += `- ${acrescimo}\n`;
+            });
+        }
+        if (item.batatas) {
+            message += `Batatas:\n`;
+            item.batatas.forEach(batata => {
+                const batataCost = parsePrice(batata.name);
+                itemTotal += batataCost * batata.quantity;
+                message += `- ${batata.name} (x${batata.quantity})\n`;
+            });
+        }
+        if (item.bebidas) {
+            message += `Bebidas:\n`;
+            item.bebidas.forEach(bebida => {
+                const bebidaCost = parsePrice(bebida.name);
+                itemTotal += bebidaCost * bebida.quantity;
+                message += `- ${bebida.name} (x${bebida.quantity})\n`;
+            });
+        }
+        message += `Subtotal: R$ ${itemTotal.toFixed(2).replace('.', ',')}\n\n`;
+        total += itemTotal;
+    });
+    message += `*Total: R$ ${total.toFixed(2).replace('.', ',')}*\n`;
+    message += `*Endereço:* ${endereco}\n`;
+    if (comentario) {
+        message += `\n*Comentários do Cliente:*\n${comentario}\n`;
+    }
+    const whatsappLink = `https://api.whatsapp.com/send?phone=5511911653936&text=${encodeURIComponent(message)}`;
+    window.open(whatsappLink, '_blank');
+}
+
+function addToCart() {
+    const button = document.querySelector('.add-to-cart');
+    button.disabled = true;
+    button.innerText = 'Adicionando...';
+    setTimeout(() => {
+        if (!currentItem.carnes || currentItem.carnes.length === 0) {
+            alert('Por favor, escolha pelo menos uma opção de carne!');
+            button.disabled = false;
+            button.innerText = 'Adicionar ao Carrinho';
+            return;
+        }
+        currentItem.molhos = Array.from(document.querySelectorAll('input[name="molho"]:checked')).map(m => m.value);
+        currentItem.acrescimos = Array.from(document.querySelectorAll('input[name="acrescimo"]:checked')).map(a => a.value);
+        cart.push({ ...currentItem });
+        closeModal('itemModal');
+        updateCart();
+        pulseCartButton();
+        button.disabled = false;
+        button.innerText = 'Adicionar ao Carrinho';
+    }, 500);
+}
     </script>
 </body>
 </html>
